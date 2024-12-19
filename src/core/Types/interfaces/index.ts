@@ -1,5 +1,5 @@
 export interface IDateSchema {
-  fullYear: string;
+  fullDate: string;
   weekday: string;
   day: number;
   monthNumber: number;
