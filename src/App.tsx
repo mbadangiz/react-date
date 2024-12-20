@@ -1,9 +1,9 @@
-import ReactPersianDate from "./components";
+import { DatePicker } from "./components/Datepicker";
 
 function App() {
   return (
-    <div className="w-full h-full flex justify-center items-center content-center  flex-wrap">
-      <ReactPersianDate />
+    <div className="flex h-full w-full flex-wrap content-center items-center justify-center">
+      <DatePicker />
     </div>
   );
 }

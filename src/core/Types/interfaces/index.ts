@@ -10,6 +10,7 @@ export interface IDaySchema {
   day: number;
   month: IDiffrentShowStyles;
   year: string;
+  gregorianDate: Date;
 }
 
 export interface IDateState {
@@ -18,8 +19,14 @@ export interface IDateState {
   dayList: IDaySchema[];
   currentDayFullDate: string;
 }
+
 export interface IDaysListsProp {
-  commonSingleDayStyleConfig: string;
   monthDays: IDateState;
   currentDay: string;
+}
+
+export interface ICalendarControllerProps {
+  handlePrevMonth: () => void;
+  monthDays: IDateState;
+  handleNextMonth: () => void;
 }
