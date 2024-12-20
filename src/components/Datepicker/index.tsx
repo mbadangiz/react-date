@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 import { IDateState } from "../../core/Types/interfaces";
-import { faIRTimeLocalize, generatePersianMonthDays } from "../../utils";
-import { DaysLists } from "./DaysLists";
+import { generatePersianMonthDays } from "../../utils";
 import { CalendarController } from "./CalendarController";
+import { DaysLists } from "./DaysLists";
 
 export function DatePicker() {
   const baseDate = new Date();
-
-  const [month, setMonth] = useState(baseDate.getMonth() + 1);
-  const [year, setYear] = useState(baseDate.getFullYear());
 
   const [monthDays, setMonthDays] = useState<IDateState>(
     generatePersianMonthDays(baseDate),
   );
 
+  const [month, setMonth] = useState(baseDate.getMonth() + 1);
+  const [year, setYear] = useState(baseDate.getFullYear());
+
   useEffect(() => {
-    if (month !== baseDate.getMonth() + 1) {
-      const date = `${year}-${month}-10 12:00:00`;
-      setMonthDays(generatePersianMonthDays(new Date(date)));
-    }
+    const date = `${year}-${month}-24 12:22:22`;
+    setMonthDays(generatePersianMonthDays(new Date(date)));
   }, [month]);
 
   function handlePrevMonth() {
@@ -39,8 +37,6 @@ export function DatePicker() {
     }
   }
 
-  const currentDay = faIRTimeLocalize(baseDate, { dateStyle: "short" });
-
   return (
     <div className="h-[550px] w-[425px] rounded-2xl bg-white p-5 pb-7">
       <CalendarController
@@ -48,7 +44,7 @@ export function DatePicker() {
         monthDays={monthDays}
         handleNextMonth={handleNextMonth}
       />
-      <DaysLists monthDays={monthDays} currentDay={currentDay} />
+      <DaysLists monthDays={monthDays} baseDate={baseDate} />
     </div>
   );
 }

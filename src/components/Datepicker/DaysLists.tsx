@@ -1,10 +1,14 @@
 import classNames from "classnames";
 import { weekDaysList } from "../../constants/faDate";
 import { IDaysListsProp } from "../../core/Types/interfaces";
+import { faIRTimeLocalize } from "../../utils";
 
-export function DaysLists({ monthDays, currentDay }: IDaysListsProp) {
+export function DaysLists({ monthDays, baseDate }: IDaysListsProp) {
   const commonSingleDayStyleConfig =
     "flex size-12 content-center items-center justify-center rounded-lg ";
+
+  const currentDay = faIRTimeLocalize(baseDate, { dateStyle: "short" });
+
   return (
     <div className="flex flex-wrap content-center items-center justify-center gap-2">
       {weekDaysList.map((day) => {
@@ -28,7 +32,7 @@ export function DaysLists({ monthDays, currentDay }: IDaysListsProp) {
                 month.numeric === monthDays.currentMonth.numeric,
               "text-light-gray-300":
                 month.numeric !== monthDays.currentMonth.numeric,
-              "bg-bluePowder text-white": currentDay === fullDate,
+              "!bg-bluePowder text-white": currentDay === fullDate,
             })}
           >
             {day}

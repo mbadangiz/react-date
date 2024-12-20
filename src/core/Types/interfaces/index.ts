@@ -22,7 +22,7 @@ export interface IDateState {
 
 export interface IDaysListsProp {
   monthDays: IDateState;
-  currentDay: string;
+  baseDate: Date;
 }
 
 export interface ICalendarControllerProps {
