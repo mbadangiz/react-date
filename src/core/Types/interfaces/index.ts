@@ -29,7 +29,7 @@ export interface IDaysListsProp {
 
 export interface ICalendarControllerProps {
   handlePrevMonth: () => void;
-  monthDays: IDateState;
+  currentYearAndMonth: string;
   handleNextMonth: () => void;
   handleShowJumpToDate: () => void;
 }

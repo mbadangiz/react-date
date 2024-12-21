@@ -68,7 +68,7 @@ export function DatePicker() {
       />
       <CalendarController
         handlePrevMonth={handlePrevMonth}
-        monthDays={monthDays}
+        currentYearAndMonth={`${monthDays.currentMonth.long} ${monthDays.currentYear}`}
         handleNextMonth={handleNextMonth}
         handleShowJumpToDate={handleShowJumpToDate}
       />

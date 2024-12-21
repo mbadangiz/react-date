@@ -1,13 +1,13 @@
 import { ChevronRight, ChevronLeft } from "react-feather";
 import { ICalendarControllerProps } from "../../core/Types/interfaces";
+import { useEffect, useState } from "react";
 
 export function CalendarController({
   handleNextMonth,
   handlePrevMonth,
-  monthDays,
+  currentYearAndMonth,
   handleShowJumpToDate,
 }: ICalendarControllerProps) {
-  const month = monthDays.currentMonth.long;
   return (
     <div className="flex h-12 content-center items-center justify-between text-light-primary-text">
       <div className="cursor-pointer" onClick={handlePrevMonth}>
@@ -17,7 +17,7 @@ export function CalendarController({
         className="cursor-pointer font-Medium_ir text-[17px]"
         onClick={handleShowJumpToDate}
       >
-        {month} {monthDays.currentYear}
+        {currentYearAndMonth}
       </div>
       <div className="cursor-pointer" onClick={handleNextMonth}>
         <ChevronLeft size={18} />
