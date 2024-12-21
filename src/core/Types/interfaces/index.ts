@@ -1,3 +1,5 @@
+import { ButtonHTMLAttributes, ReactNode } from "react";
+
 export interface IDiffrentShowStyles {
   long?: string;
   numeric?: number;
@@ -29,4 +31,21 @@ export interface ICalendarControllerProps {
   handlePrevMonth: () => void;
   monthDays: IDateState;
   handleNextMonth: () => void;
+  handleShowJumpToDate: () => void;
+}
+
+export interface IJumpToDateProps {
+  showJumpToDate: boolean;
+  handleShowJumpToDate: () => void;
+  handleJumpToDate: (initialYear: number, initialMonth: number) => void;
+}
+
+export interface ITinyNumberProps {
+  initialYear: number;
+  handleMinues: () => void;
+  handlePlus: () => void;
+  handleOnChangeYearInput: (val: number) => void;
+}
+export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: ReactNode;
 }
