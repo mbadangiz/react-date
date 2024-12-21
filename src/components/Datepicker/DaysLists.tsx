@@ -3,9 +3,9 @@ import { weekDaysList } from "../../constants/faDate";
 import { IDaysListsProp } from "../../core/Types/interfaces";
 import { faIRTimeLocalize } from "../../utils";
 
-export function DaysLists({ monthDays, baseDate }: IDaysListsProp) {
+export function DaysLists({ monthDays, baseDate, onChange }: IDaysListsProp) {
   const commonSingleDayStyleConfig =
-    "flex size-12 content-center items-center justify-center rounded-lg ";
+    "flex size-12 content-center items-center justify-center rounded-lg cursor-pointer transition-all";
 
   const currentDay = faIRTimeLocalize(baseDate, { dateStyle: "short" });
 
@@ -22,18 +22,21 @@ export function DaysLists({ monthDays, baseDate }: IDaysListsProp) {
           </div>
         );
       })}
-      {monthDays.dayList.map(({ day, fullDate, month }) => {
+      {monthDays.dayList.map(({ day, fullDate, month, gregorianDate }) => {
         return (
           <div
             key={fullDate}
             className={classNames({
               [commonSingleDayStyleConfig as string]: true,
-              "bg-light-gray-100 font-Bold_ir text-light-primary-text":
+              "bg-light-gray-100 font-Bold_ir text-light-primary-text hover:bg-light-gray-200":
                 month.numeric === monthDays.currentMonth.numeric,
               "text-light-gray-300":
                 month.numeric !== monthDays.currentMonth.numeric,
               "!bg-bluePowder text-white": currentDay === fullDate,
             })}
+            onClick={() => {
+              return onChange(gregorianDate);
+            }}
           >
             {day}
           </div>

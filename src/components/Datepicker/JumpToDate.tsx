@@ -54,15 +54,16 @@ export function JumpToDate({
         <div className="size-full space-y-4 px-4 pb-5 pt-6">
           <h3 className="text-center font-Medium_ir text-lg">رفتن به ماه</h3>
           <div className="flex w-full flex-wrap justify-between gap-y-1.5">
-            {persianMonthsList.map((singleMonth) => (
-              <div
-                key={singleMonth.numeric}
-                className={`w-[calc(100%/3-1.5%)] cursor-pointer rounded bg-light-gray-100 py-2 text-center text-sm ${initialMonth === singleMonth.numeric && "border-2 border-solid border-bluePowder !bg-bluePowder/20 font-Bold_ir !text-bluePowder"}`}
-                onClick={() => handleSelectMonth(singleMonth.numeric!)}
-              >
-                {singleMonth.long}
-              </div>
-            ))}
+            {persianMonthsList &&
+              persianMonthsList.map((singleMonth) => (
+                <div
+                  key={singleMonth.numeric}
+                  className={`w-[calc(100%/3-1.5%)] cursor-pointer rounded bg-light-gray-100 py-2 text-center text-sm ${initialMonth === singleMonth.numeric && "border-2 border-solid border-bluePowder !bg-bluePowder/20 font-Bold_ir !text-bluePowder"}`}
+                  onClick={() => handleSelectMonth(singleMonth.numeric!)}
+                >
+                  {singleMonth.long}
+                </div>
+              ))}
           </div>
           <TinyNumber
             handleOnChangeYearInput={handleOnChangeYearInput}

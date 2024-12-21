@@ -126,9 +126,8 @@ export function generatePersianMonthDays(initialDate: Date): IDateState {
 
     const tempDateMaker = (option: Intl.DateTimeFormatOptions) =>
       calcDateDifferenceToFaIR(baseDate, diff, "-", option);
-
     arr.push({
-      gregorianDate: new Date(baseDate),
+      gregorianDate: new Date(calculatingDateDifference(baseDate, diff, "-")),
       fullDate: tempDateMaker({ dateStyle: "short" }),
       weekday: tempDateMaker({ weekday: "long" }),
       month: {

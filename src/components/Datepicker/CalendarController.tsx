@@ -1,6 +1,5 @@
-import { ChevronRight, ChevronLeft } from "react-feather";
+import { ChevronLeft, ChevronRight } from "react-feather";
 import { ICalendarControllerProps } from "../../core/Types/interfaces";
-import { useEffect, useState } from "react";
 
 export function CalendarController({
   handleNextMonth,

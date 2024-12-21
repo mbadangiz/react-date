@@ -25,6 +25,7 @@ export interface IDateState {
 export interface IDaysListsProp {
   monthDays: IDateState;
   baseDate: Date;
+  onChange: (e: Date) => void;
 }
 
 export interface ICalendarControllerProps {
@@ -48,4 +49,8 @@ export interface ITinyNumberProps {
 }
 export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
+}
+
+export interface IDatePickerProps {
+  onChange: (e: Date) => void;
 }

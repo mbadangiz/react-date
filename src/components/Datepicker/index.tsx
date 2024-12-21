@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { IDateState } from "../../core/Types/interfaces";
+import { IDatePickerProps, IDateState } from "../../core/Types/interfaces";
 import { generatePersianMonthDays } from "../../utils";
 import { CalendarController } from "./CalendarController";
 import { DaysLists } from "./DaysLists";
 import { JumpToDate } from "./JumpToDate";
 import moment from "moment-jalaali";
 
-export function DatePicker() {
+export function DatePicker({ onChange }: IDatePickerProps) {
   const baseDate = new Date();
 
   const [monthDays, setMonthDays] = useState<IDateState>(
@@ -57,8 +57,6 @@ export function DatePicker() {
     setYear(year);
   }
 
-  console.log(monthDays);
-
   return (
     <div className="relative h-[550px] w-[425px] overflow-hidden rounded-2xl bg-white p-5 pb-7">
       <JumpToDate
@@ -72,7 +70,11 @@ export function DatePicker() {
         handleNextMonth={handleNextMonth}
         handleShowJumpToDate={handleShowJumpToDate}
       />
-      <DaysLists monthDays={monthDays} baseDate={baseDate} />
+      <DaysLists
+        monthDays={monthDays}
+        baseDate={baseDate}
+        onChange={onChange}
+      />
     </div>
   );
 }
