@@ -1,24 +1,31 @@
 import classNames from "classnames";
-import { weekDaysList } from "../../constants/faDate";
+import { DayOfWeekDef } from "../../constants/Date";
 import { IDaysListsProp } from "../../core/Types/interfaces";
-import { faIRTimeLocalize } from "../../utils";
+import { LocalDateGenerator } from "../../utils";
 
-export function DaysLists({ monthDays, baseDate, onChange }: IDaysListsProp) {
+export function DaysLists({
+  monthDays,
+  baseDate,
+  onChange,
+  calendarType,
+  defType,
+}: IDaysListsProp) {
+  const { localizedDate } = new LocalDateGenerator(calendarType);
   const commonSingleDayStyleConfig =
     "flex size-12 content-center items-center justify-center rounded-lg cursor-pointer transition-all";
 
-  const currentDay = faIRTimeLocalize(baseDate, { dateStyle: "short" });
+  const currentDay = localizedDate(baseDate, { dateStyle: "short" });
 
   return (
     <div className="flex flex-wrap content-center items-center justify-center gap-2">
-      {weekDaysList.map((day) => {
+      {DayOfWeekDef[defType].map((day) => {
         return (
           <div
             key={day.numeric}
             className={`text-light-gray-300 ${commonSingleDayStyleConfig}`}
           >
-            {day.long?.split("")[0]}
-            {day.long?.split("")[1]}
+            {day.name.split("")[0]}
+            {day.name.split("")[1]}
           </div>
         );
       })}

@@ -1,9 +1,15 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
+import { T_CalendarType, T_localType } from "..";
 
 export interface IDiffrentShowStyles {
   long?: string;
   numeric?: number;
   fullDate?: string;
+}
+export interface IMonthData {
+  name: string;
+  dayLong: number;
+  numeric: number;
 }
 
 export interface IDaySchema {
@@ -26,6 +32,8 @@ export interface IDaysListsProp {
   monthDays: IDateState;
   baseDate: Date;
   onChange: (e: Date) => void;
+  calendarType: T_CalendarType;
+  defType: T_localType;
 }
 
 export interface ICalendarControllerProps {
@@ -39,6 +47,8 @@ export interface IJumpToDateProps {
   showJumpToDate: boolean;
   handleShowJumpToDate: () => void;
   handleJumpToDate: (initialYear: number, initialMonth: number) => void;
+  calendarType: T_CalendarType;
+  defType: T_localType;
 }
 
 export interface ITinyNumberProps {
@@ -52,5 +62,6 @@ export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export interface IDatePickerProps {
-  onChange: (e: Date) => void;
+  calendarType?: T_CalendarType;
+  onChange?: (e: Date) => void;
 }

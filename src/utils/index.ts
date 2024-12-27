@@ -1,7 +1,13 @@
-import { IDaySchema, IDateState } from "../core/Types/interfaces";
+import {
+  DayOfWeekDef,
+  locationBasedCalendar,
+  MonthDef,
+} from "../constants/Date";
+import { T_CalendarType, T_localType } from "../core/Types";
+import { IDateState, IDaySchema } from "../core/Types/interfaces";
 import { TCalculationType } from "../core/Types/types";
 
-export function convertPersianToArabicNumbers(persianStr: string): string {
+export function convertToEnNumbers(persianStr: string): string {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
   return persianStr
     .split("")
@@ -12,139 +18,162 @@ export function convertPersianToArabicNumbers(persianStr: string): string {
     .join("");
 }
 
-export function parseStringNumber(strNum: string): number {
-  return parseInt(convertPersianToArabicNumbers(strNum));
+export function parsIntStrings(strNum: string): number {
+  return parseInt(convertToEnNumbers(strNum));
 }
 
-export function faIRTimeLocalize(
-  date: Date,
-  options: Intl.DateTimeFormatOptions,
-): string {
-  return date.toLocaleDateString("fa-IR", options);
-}
+export class LocalDateGenerator {
+  private calendarType: T_localType;
 
-export function parsingIntFaIRDate(
-  date: Date,
-  options: Intl.DateTimeFormatOptions,
-): number {
-  return parseStringNumber(faIRTimeLocalize(date, options));
-}
+  constructor(calendar: T_CalendarType) {
+    this.calendarType = locationBasedCalendar[calendar];
+  }
 
-export function calculatingDateDifference(
-  basedate: Date,
-  dayLong: number,
-  calculationType: TCalculationType,
-): Date {
-  const userDayLong = dayLong * 24 * 60 * 60 * 1000;
+  private calculatingDateDifference = (
+    basedate: Date,
+    dayLong: number,
+    calculationType: TCalculationType,
+  ): Date => {
+    const userDayLong = dayLong * 24 * 60 * 60 * 1000;
 
-  const date =
-    calculationType === "+"
-      ? new Date(new Date(basedate).getTime() + userDayLong)
-      : new Date(new Date(basedate).getTime() - userDayLong);
+    const date =
+      calculationType === "+"
+        ? new Date(new Date(basedate).getTime() + userDayLong)
+        : new Date(new Date(basedate).getTime() - userDayLong);
 
-  return date;
-}
+    return date;
+  };
 
-export function calcDateDifferenceToFaIR(
-  basedate: Date,
-  dayLong: number,
-  calculationType: TCalculationType,
-  options: Intl.DateTimeFormatOptions,
-): string {
-  return faIRTimeLocalize(
-    calculatingDateDifference(basedate, dayLong, calculationType),
-    options,
-  );
-}
+  parsingIntToLocalDate = (
+    date: Date,
+    options: Intl.DateTimeFormatOptions,
+  ): number => {
+    return parsIntStrings(this.localizedDate(date, options));
+  };
 
-export function generatePersianMonthDays(initialDate: Date): IDateState {
-  const baseDate = initialDate || new Date();
-
-  const todayNumeric = parsingIntFaIRDate(baseDate, { day: "numeric" }) - 1;
-  const currentMonthNumeric = parsingIntFaIRDate(baseDate, {
-    month: "numeric",
-  });
-
-  function forwardToFriday(): number {
-    const lengthToEnd =
-      currentMonthNumeric > 6 ? 29 - todayNumeric : 30 - todayNumeric;
-
-    let lastDayOfMonthWeekDay = calcDateDifferenceToFaIR(
-      baseDate,
-      lengthToEnd,
-      "+",
-      { weekday: "long" },
+  private calcDateDifferenceToLocalDate = (
+    basedate: Date,
+    dayLong: number,
+    calculationType: TCalculationType,
+    options: Intl.DateTimeFormatOptions,
+  ): string => {
+    return this.localizedDate(
+      this.calculatingDateDifference(basedate, dayLong, calculationType),
+      options,
     );
+  };
 
-    let index = 0;
+  localizedDate = (date: Date, options: Intl.DateTimeFormatOptions): string => {
+    return date.toLocaleDateString(this.calendarType, options);
+  };
 
-    while (lastDayOfMonthWeekDay !== "جمعه") {
-      index++;
-      const current = lengthToEnd + index;
-      lastDayOfMonthWeekDay = calcDateDifferenceToFaIR(baseDate, current, "+", {
-        weekday: "long",
+  generateMonthArray = (initialDate: Date): IDateState => {
+    const baseDate = initialDate || new Date();
+
+    const firstDayOfWeek = DayOfWeekDef[this.calendarType][0].name;
+    const lastDayOfWeek = DayOfWeekDef[this.calendarType][6].name;
+
+    const todayNumeric =
+      this.parsingIntToLocalDate(baseDate, { day: "numeric" }) - 1;
+
+    const currentMonthNumeric = this.parsingIntToLocalDate(baseDate, {
+      month: "numeric",
+    });
+    const currentMonthString = this.localizedDate(baseDate, { month: "long" });
+
+    let monthLong = MonthDef[this.calendarType].find(
+      (item) => item.name === currentMonthString,
+    )!.dayLong!;
+
+    const forwardToLastDayOfWeek = (): number => {
+      const lengthToEnd = monthLong - todayNumeric - 1;
+
+      let lastDayOfMonthWeekDay = this.calcDateDifferenceToLocalDate(
+        baseDate,
+        lengthToEnd,
+        "+",
+        { weekday: "long" },
+      );
+
+      let index = 0;
+
+      while (lastDayOfMonthWeekDay !== lastDayOfWeek) {
+        index++;
+        const current = lengthToEnd + index;
+        lastDayOfMonthWeekDay = this.calcDateDifferenceToLocalDate(
+          baseDate,
+          current,
+          "+",
+          {
+            weekday: "long",
+          },
+        );
+      }
+      return index;
+    };
+
+    const backWardCountToFirstDayOfWeek = (): number => {
+      let firstDayOfMonthWeekDay = this.calcDateDifferenceToLocalDate(
+        baseDate,
+        todayNumeric,
+        "-",
+        { weekday: "long" },
+      );
+      let index = 0;
+
+      while (firstDayOfMonthWeekDay !== firstDayOfWeek) {
+        index++;
+        const current = todayNumeric + index;
+        firstDayOfMonthWeekDay = this.calcDateDifferenceToLocalDate(
+          baseDate,
+          current,
+          "-",
+          {
+            weekday: "long",
+          },
+        );
+      }
+      return index;
+    };
+
+    const backward = backWardCountToFirstDayOfWeek();
+    const forward = forwardToLastDayOfWeek();
+    const arr: IDaySchema[] = [];
+
+    const currentYear = this.parsingIntToLocalDate(baseDate, {
+      year: "numeric",
+    });
+
+    for (let index = 1 - backward; index < monthLong + forward + 1; index++) {
+      const diff = todayNumeric - index + 1;
+
+      const tempDateMaker = (option: Intl.DateTimeFormatOptions) =>
+        this.calcDateDifferenceToLocalDate(baseDate, diff, "-", option);
+
+      arr.push({
+        gregorianDate: new Date(
+          this.calculatingDateDifference(baseDate, diff, "-"),
+        ),
+        fullDate: tempDateMaker({ dateStyle: "short" }),
+        weekday: tempDateMaker({ weekday: "long" }),
+        month: {
+          numeric: parsIntStrings(tempDateMaker({ month: "2-digit" })),
+          long: tempDateMaker({ month: "long" }),
+        },
+        year: tempDateMaker({ month: "long" }),
+        day: parsIntStrings(tempDateMaker({ day: "numeric" })),
       });
     }
-    return index;
-  }
 
-  function backWardCountToSat(): number {
-    let firstDayOfMonthWeekDay = calcDateDifferenceToFaIR(
-      baseDate,
-      todayNumeric,
-      "-",
-      { weekday: "long" },
-    );
-    let index = 0;
-
-    while (firstDayOfMonthWeekDay !== "شنبه") {
-      index++;
-      const current = todayNumeric + index;
-      firstDayOfMonthWeekDay = calcDateDifferenceToFaIR(
-        baseDate,
-        current,
-        "-",
-        {
-          weekday: "long",
-        },
-      );
-    }
-    return index;
-  }
-
-  const backward = backWardCountToSat();
-  const forward = forwardToFriday();
-  const arr: IDaySchema[] = [];
-  const limit = (currentMonthNumeric > 6 ? 31 : 32) + forward;
-
-  const currentMonthLong = faIRTimeLocalize(baseDate, { month: "long" });
-
-  const currentYear = parsingIntFaIRDate(baseDate, { year: "numeric" });
-
-  for (let index = 1 - backward; index < limit; index++) {
-    const diff = todayNumeric - index + 1;
-
-    const tempDateMaker = (option: Intl.DateTimeFormatOptions) =>
-      calcDateDifferenceToFaIR(baseDate, diff, "-", option);
-    arr.push({
-      gregorianDate: new Date(calculatingDateDifference(baseDate, diff, "-")),
-      fullDate: tempDateMaker({ dateStyle: "short" }),
-      weekday: tempDateMaker({ weekday: "long" }),
-      month: {
-        numeric: parseStringNumber(tempDateMaker({ month: "2-digit" })),
-        long: tempDateMaker({ month: "long" }),
-      },
-      year: tempDateMaker({ month: "long" }),
-      day: parseStringNumber(tempDateMaker({ day: "numeric" })),
+    const currentDayFullDate = this.localizedDate(baseDate, {
+      dateStyle: "short",
     });
-  }
 
-  const currentDayFullDate = faIRTimeLocalize(baseDate, { dateStyle: "short" });
-
-  return {
-    dayList: arr,
-    currentDayFullDate,
-    currentMonth: { long: currentMonthLong, numeric: currentMonthNumeric },
-    currentYear: currentYear,
+    return {
+      dayList: arr,
+      currentDayFullDate,
+      currentMonth: { long: currentMonthString, numeric: currentMonthNumeric },
+      currentYear: currentYear,
+    };
   };
 }
