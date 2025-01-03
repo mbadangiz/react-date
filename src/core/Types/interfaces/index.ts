@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import { ButtonHTMLAttributes, ReactNode, WheelEvent } from "react";
 import { T_CalendarType, T_localType } from "..";
 
 export interface IDiffrentShowStyles {
@@ -34,6 +34,7 @@ export interface IDaysListsProp {
   onChange: (e: Date) => void;
   calendarType: T_CalendarType;
   defType: T_localType;
+  handleWheel: (event: WheelEvent<HTMLDivElement>) => void;
 }
 
 export interface ICalendarControllerProps {

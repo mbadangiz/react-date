@@ -9,6 +9,7 @@ export function DaysLists({
   onChange,
   calendarType,
   defType,
+  handleWheel,
 }: IDaysListsProp) {
   const { localizedDate } = new LocalDateGenerator(calendarType);
   const commonSingleDayStyleConfig =
@@ -17,7 +18,10 @@ export function DaysLists({
   const currentDay = localizedDate(baseDate, { dateStyle: "short" });
 
   return (
-    <div className="flex flex-wrap content-center items-center justify-center gap-2">
+    <div
+      className="flex flex-wrap content-center items-center justify-center gap-2"
+      onWheel={handleWheel}
+    >
       {DayOfWeekDef[defType].map((day) => {
         return (
           <div

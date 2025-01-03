@@ -1,5 +1,5 @@
 import moment from "moment-jalaali";
-import { useEffect, useState } from "react";
+import { useEffect, useState, WheelEvent } from "react";
 import { T_localType } from "../../core/Types";
 import { IDatePickerProps, IDateState } from "../../core/Types/interfaces";
 import { LocalDateGenerator } from "../../utils";
@@ -61,13 +61,17 @@ export function DatePicker({
     setYear(initialYear);
   }
 
+  function handleWheel(event: WheelEvent<HTMLDivElement>) {
+    if (event.deltaY > 0) handleNextMonth();
+    else handlePrevMonth();
+  }
+
   return (
     <div
       dir={dir}
       className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"}`}
     >
-      <div className="mb-3"></div>
-      <div className="relative h-[490px] w-[425px] overflow-hidden rounded-2xl bg-white p-5 pb-7 shadow-xl">
+      <div className="absolute h-[490px] w-[425px] overflow-hidden rounded-2xl bg-white p-5 pb-7 shadow-xl">
         <JumpToDate
           month={month}
           year={year}
@@ -84,12 +88,25 @@ export function DatePicker({
           handleNextMonth={handleNextMonth}
           handleShowJumpToDate={handleShowJumpToDate}
         />
+
         <DaysLists
           defType={defType}
           calendarType={calendarType}
           monthDays={monthDays}
           baseDate={baseDate}
           onChange={onChange ? onChange : () => {}}
+          handleWheel={handleWheel}
+        />
+      </div>
+      <div className="mb-3">
+        <input
+          type="text"
+          onClick={(e) => {
+            const innerWidth = window.innerWidth;
+            const calendarHeightDiff = innerWidth - 490;
+            // console.log(e.currentTarget.offsetTop);
+            console.log(innerWidth);
+          }}
         />
       </div>
     </div>

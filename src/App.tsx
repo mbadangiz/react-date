@@ -2,9 +2,9 @@ import { DatePicker } from "./components/Datepicker";
 
 function App() {
   return (
-    <div className="flex h-full w-full flex-wrap content-center items-center justify-center">
+    <div className="mx-auto w-max">
       <DatePicker
-        calendarType="Gregorian"
+        calendarType="Persian"
         onChange={(e) => {
           console.log(e);
         }}

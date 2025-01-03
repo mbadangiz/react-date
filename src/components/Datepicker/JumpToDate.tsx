@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "react-feather";
 import { MonthDef } from "../../constants/Date";
 import Button from "../../core/components/Button";
@@ -26,9 +26,43 @@ export function JumpToDate({
 
   const handleSelectMonth = (month: number) => setInitialMonth(month);
 
+  const handleApproveDate = () => {
+    if (initialMonth) {
+      handleJumpToDate(initialYear, initialMonth);
+      handleShowJumpToDate();
+    } else {
+      setErr(true);
+    }
+  };
+
+  const handleJumpToDateForEscapeEnter = (event: KeyboardEvent) => {
+    if (event.key === "Escape") handleShowJumpToDate();
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleApproveDate();
+    }
+  };
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (showJumpToDate) {
+      modalRef.current?.focus();
+      document.addEventListener("keydown", handleJumpToDateForEscapeEnter);
+    } else {
+      document.removeEventListener("keydown", handleJumpToDateForEscapeEnter);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleJumpToDateForEscapeEnter);
+    };
+  }, [showJumpToDate, handleJumpToDateForEscapeEnter]);
+
   return (
     <div
-      className={`absolute left-0 ${showJumpToDate ? "top-0" : "-top-full"} flex size-full content-center items-center justify-center overflow-hidden rounded-2xl bg-slate-800/15 backdrop-blur transition-all duration-700`}
+      className={`absolute left-0 ${showJumpToDate ? "top-0" : "-top-full"} z-50 flex size-full content-center items-center justify-center overflow-hidden rounded-2xl bg-slate-800/15 backdrop-blur transition-all duration-700`}
+      ref={modalRef}
     >
       <div
         className={`relative min-h-[350px] w-10/12 rounded-lg bg-white transition-all ${showJumpToDate ? "-top-0" : "top-[200%]"} transition-all delay-700 duration-700`}
@@ -72,17 +106,7 @@ export function JumpToDate({
             </div>
           )}
           <div className="text-center">
-            <Button
-              onClick={() => {
-                if (initialMonth) {
-                  handleJumpToDate(initialYear, initialMonth);
-                  handleShowJumpToDate();
-                } else {
-                  setErr(true);
-                }
-              }}
-              className="w-full text-sm"
-            >
+            <Button onClick={handleApproveDate} className="w-full text-sm">
               {defType === "fa-IR" ? "تایید " : "Approve"}
             </Button>
           </div>

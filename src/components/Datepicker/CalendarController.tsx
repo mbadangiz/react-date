@@ -11,7 +11,7 @@ export function CalendarController({
   return (
     <div className="flex h-12 content-center items-center justify-between text-light-primary-text">
       <div
-        className={`cursor-pointer ${dir === "ltr" && "rotate-180"}`}
+        className={`cursor-pointer ${dir === "ltr" && "rotate-180"} z-0`}
         onClick={handlePrevMonth}
       >
         <ChevronRight size={18} />
@@ -23,7 +23,7 @@ export function CalendarController({
         {currentYearAndMonth}
       </div>
       <div
-        className={`cursor-pointer ${dir === "ltr" && "rotate-180"}`}
+        className={`cursor-pointer ${dir === "ltr" && "rotate-180"} z-0`}
         onClick={handleNextMonth}
       >
         <ChevronLeft size={18} />
