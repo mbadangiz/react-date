@@ -10,6 +10,12 @@ export default {
         Light_ir: "IRANSans_Light",
         UltraLight_ir: "IRANSans_UltraLight",
         Reg_ir: "IRANSans_Reg",
+        Black_en: "Inter_Black",
+        Bold_en: "Inter_Bold",
+        Medium_en: "Inter_Medium",
+        Light_en: "Inter_Light",
+        UltraLight_en: "Inter_UltraLight",
+        Reg_en: "Inter_Reg",
       },
       colors: {
         light: {

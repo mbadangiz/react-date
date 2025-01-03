@@ -6,6 +6,7 @@ export default function TinyNumber({
   handleMinues,
   handlePlus,
   handleOnChangeYearInput,
+  defType,
 }: ITinyNumberProps) {
   return (
     <div className="mx-auto flex w-full flex-wrap content-center items-center justify-center gap-1 text-center">
@@ -15,12 +16,16 @@ export default function TinyNumber({
       >
         <Minus size={12} />
       </div>
-      <div className="flex h-9 w-20 content-center items-center justify-center rounded bg-light-gray-200">
+      <div
+        className={`flex h-9 w-20 content-center items-center justify-center rounded bg-light-gray-200 ${defType === "fa-IR" ? "font-Reg_ir" : "font-Reg_en"}`}
+      >
         <input
-          type="number"
+          type="text"
           value={initialYear}
-          onChange={(e) => handleOnChangeYearInput(parseInt(e.target.value))}
-          className="size-full bg-transparent text-center outline-none"
+          onChange={(e) => {
+            handleOnChangeYearInput(parseInt(e.target.value));
+          }}
+          className={`size-full bg-transparent text-center outline-none ${defType === "fa-IR" ? "font-Reg_ir" : "!font-Reg_en"}`}
         />
       </div>
       <div

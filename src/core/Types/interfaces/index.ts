@@ -2,8 +2,8 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 import { T_CalendarType, T_localType } from "..";
 
 export interface IDiffrentShowStyles {
-  long?: string;
-  numeric?: number;
+  long: string;
+  numeric: number;
   fullDate?: string;
 }
 export interface IMonthData {
@@ -41,6 +41,7 @@ export interface ICalendarControllerProps {
   currentYearAndMonth: string;
   handleNextMonth: () => void;
   handleShowJumpToDate: () => void;
+  dir: string;
 }
 
 export interface IJumpToDateProps {
@@ -49,6 +50,8 @@ export interface IJumpToDateProps {
   handleJumpToDate: (initialYear: number, initialMonth: number) => void;
   calendarType: T_CalendarType;
   defType: T_localType;
+  month: number;
+  year: number;
 }
 
 export interface ITinyNumberProps {
@@ -56,6 +59,7 @@ export interface ITinyNumberProps {
   handleMinues: () => void;
   handlePlus: () => void;
   handleOnChangeYearInput: (val: number) => void;
+  defType: T_localType;
 }
 export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;

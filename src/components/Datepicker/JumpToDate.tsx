@@ -1,46 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { X } from "react-feather";
 import { MonthDef } from "../../constants/Date";
 import Button from "../../core/components/Button";
 import TinyNumber from "../../core/components/TinyNumber";
 import { IJumpToDateProps } from "../../core/Types/interfaces";
-import { LocalDateGenerator } from "../../utils";
 
 export function JumpToDate({
   handleShowJumpToDate,
   showJumpToDate,
   handleJumpToDate,
-  calendarType,
   defType,
+  month,
+  year,
 }: IJumpToDateProps) {
-  const { parsingIntToLocalDate } = new LocalDateGenerator(calendarType);
-
-  const year = parsingIntToLocalDate(new Date(), { year: "numeric" });
-
   const [initialYear, setInitialYear] = useState<number>(year);
-  const [initialMonth, setInitialMonth] = useState<number>(0);
+  const [initialMonth, setInitialMonth] = useState<number>(month);
 
-  const [err, setErr] = useState<boolean>(!false);
+  const [err, setErr] = useState<boolean>(!initialMonth ? true : false);
 
-  useEffect(() => {
-    setErr(!showJumpToDate);
-    setInitialMonth(0);
-    setInitialYear(year);
-  }, [showJumpToDate]);
+  const handleMinues = () => setInitialYear((prev) => prev - 1);
 
-  function handleMinues() {
-    setInitialYear((prev) => prev - 1);
-  }
-  function handlePlus() {
-    setInitialYear((prev) => prev + 1);
-  }
-  function handleOnChangeYearInput(val: number) {
-    setInitialYear(val);
-  }
+  const handlePlus = () => setInitialYear((prev) => prev + 1);
 
-  function handleSelectMonth(month: number) {
-    setInitialMonth(month);
-  }
+  const handleOnChangeYearInput = (val: number) => setInitialYear(val);
+
+  const handleSelectMonth = (month: number) => setInitialMonth(month);
 
   return (
     <div
@@ -56,13 +40,19 @@ export function JumpToDate({
           <X size={17} />
         </div>
         <div className="size-full space-y-4 px-4 pb-5 pt-6">
-          <h3 className="text-center font-Medium_ir text-lg">رفتن به ماه</h3>
+          <h3
+            className={`text-center ${defType === "fa-IR" ? "font-Medium_ir" : "font-Medium_en"} text-lg`}
+          >
+            {defType === "fa-IR"
+              ? `رفتن به   ${MonthDef[defType].find((item) => item.numeric === initialMonth)?.name} ${initialYear}`
+              : `Jump to ${MonthDef[defType].find((item) => item.numeric === initialMonth)?.name} ${initialYear} `}
+          </h3>
           <div className="flex w-full flex-wrap justify-between gap-y-1.5">
             {MonthDef &&
               MonthDef[defType].map((singleMonth) => (
                 <div
                   key={singleMonth.numeric}
-                  className={`h-10 w-[calc(100%/3-1.5%)] cursor-pointer rounded bg-light-gray-100 py-2 text-center text-sm ${initialMonth === singleMonth.numeric && "border-2 border-solid border-bluePowder !bg-bluePowder/20 font-Bold_ir !text-bluePowder"}`}
+                  className={`h-10 w-[calc(100%/3-1.5%)] cursor-pointer rounded bg-light-gray-100 py-2 text-center text-sm ${initialMonth === singleMonth.numeric && `border-2 border-solid border-bluePowder !bg-bluePowder/20 ${defType === "fa-IR" ? "font-Bold_ir" : "font-Bold_en"} !text-bluePowder`}`}
                   onClick={() => handleSelectMonth(singleMonth.numeric)}
                 >
                   {singleMonth.name}
@@ -70,6 +60,7 @@ export function JumpToDate({
               ))}
           </div>
           <TinyNumber
+            defType={defType}
             handleOnChangeYearInput={handleOnChangeYearInput}
             initialYear={initialYear}
             handleMinues={handleMinues}
@@ -84,15 +75,15 @@ export function JumpToDate({
             <Button
               onClick={() => {
                 if (initialMonth) {
-                  handleShowJumpToDate();
                   handleJumpToDate(initialYear, initialMonth);
+                  handleShowJumpToDate();
                 } else {
                   setErr(true);
                 }
               }}
               className="w-full text-sm"
             >
-              تایید تاریخ
+              {defType === "fa-IR" ? "تایید " : "Approve"}
             </Button>
           </div>
         </div>

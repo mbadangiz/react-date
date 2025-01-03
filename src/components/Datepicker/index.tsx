@@ -13,6 +13,7 @@ export function DatePicker({
 }: IDatePickerProps) {
   const baseDate = new Date();
   const defType: T_localType = calendarType === "Persian" ? "fa-IR" : "en-US";
+  const dir = calendarType === "Persian" ? "rtl" : "ltr";
 
   const { generateMonthArray } = new LocalDateGenerator(calendarType);
 
@@ -20,14 +21,18 @@ export function DatePicker({
     generateMonthArray(baseDate),
   );
 
-  const [month, setMonth] = useState<number>(baseDate.getMonth() + 1);
-  const [year, setYear] = useState<number>(baseDate.getFullYear());
+  const [month, setMonth] = useState<number>(monthDays.currentMonth.numeric);
+  const [year, setYear] = useState<number>(monthDays.currentYear);
   const [showJumpToDate, setShowJumpToDate] = useState<boolean>(false);
 
   useEffect(() => {
-    const date = `${year}-${month}-24 12:22:22`;
+    const date =
+      calendarType === "Persian"
+        ? moment(`${year}-${month}-1`, "jYYYY-jMM-jDD").format("YYYY-MM-DD")
+        : `${year}-${month}-1 12:00:00`;
+
     setMonthDays(generateMonthArray(new Date(date)));
-  }, [month]);
+  }, [month, year]);
 
   function handlePrevMonth() {
     if (month === 1) {
@@ -52,23 +57,20 @@ export function DatePicker({
   }
 
   function handleJumpToDate(initialYear: number, initialMonth: number) {
-    const date = `${initialYear}/${initialMonth}/3`;
-
-    const gregorian = moment(date, "jYYYY/jMM/jDD")
-      .format("YYYY-MM-DD")
-      .split("-");
-
-    const month = parseInt(gregorian[1]);
-    const year = parseInt(gregorian[0]);
-    setMonth(month);
-    setYear(year);
+    setMonth(initialMonth);
+    setYear(initialYear);
   }
 
   return (
-    <div dir={calendarType === "Persian" ? "rtl" : "ltr"}>
+    <div
+      dir={dir}
+      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"}`}
+    >
       <div className="mb-3"></div>
-      <div className="relative h-[550px] w-[425px] overflow-hidden rounded-2xl bg-white p-5 pb-7 shadow-xl">
+      <div className="relative h-[490px] w-[425px] overflow-hidden rounded-2xl bg-white p-5 pb-7 shadow-xl">
         <JumpToDate
+          month={month}
+          year={year}
           defType={defType}
           calendarType={calendarType}
           handleShowJumpToDate={handleShowJumpToDate}
@@ -76,6 +78,7 @@ export function DatePicker({
           handleJumpToDate={handleJumpToDate}
         />
         <CalendarController
+          dir={dir}
           handlePrevMonth={handlePrevMonth}
           currentYearAndMonth={`${monthDays.currentMonth.long} ${monthDays.currentYear}`}
           handleNextMonth={handleNextMonth}

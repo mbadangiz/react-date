@@ -35,7 +35,13 @@ export function DaysLists({
             key={fullDate}
             className={classNames({
               [commonSingleDayStyleConfig as string]: true,
-              "bg-light-gray-100 font-Bold_ir text-light-primary-text hover:bg-light-gray-200":
+              "font-Bold_ir":
+                defType === "fa-IR" &&
+                month.numeric === monthDays.currentMonth.numeric,
+              "font-Bold_en":
+                defType === "en-US" &&
+                month.numeric === monthDays.currentMonth.numeric,
+              "bg-light-gray-100 text-light-primary-text hover:bg-light-gray-200":
                 month.numeric === monthDays.currentMonth.numeric,
               "text-light-gray-300":
                 month.numeric !== monthDays.currentMonth.numeric,
