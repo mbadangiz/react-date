@@ -1,8 +1,8 @@
-import { DatePicker } from "./components/Datepicker";
+import DatePicker from "./components/Datepicker";
 
 function App() {
   return (
-    <div className="mx-auto w-max">
+    <div className="mx-auto w-max py-5">
       <DatePicker
         calendarType="Persian"
         onChange={(e) => {

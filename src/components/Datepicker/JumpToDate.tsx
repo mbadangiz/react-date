@@ -4,15 +4,17 @@ import { MonthDef } from "../../constants/Date";
 import Button from "../../core/components/Button";
 import TinyNumber from "../../core/components/TinyNumber";
 import { IJumpToDateProps } from "../../core/Types/interfaces";
+import { useDatepicker } from "../../core/provider/DatepickerProvider";
 
 export function JumpToDate({
   handleShowJumpToDate,
   showJumpToDate,
   handleJumpToDate,
-  defType,
   month,
   year,
 }: IJumpToDateProps) {
+  const { defType } = useDatepicker();
+
   const [initialYear, setInitialYear] = useState<number>(year);
   const [initialMonth, setInitialMonth] = useState<number>(month);
 
