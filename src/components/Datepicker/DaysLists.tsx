@@ -67,7 +67,7 @@ export function DaysLists({
                 month.numeric === monthDays.currentMonth.numeric,
               "text-light-gray-300":
                 month.numeric !== monthDays.currentMonth.numeric,
-              "border-2 border-solid border-bluePowder bg-bluePowder/20 text-bluePowder":
+              "border-2 border-solid border-bluePowder !bg-bluePowder/20 !text-bluePowder":
                 selecedDate === fullDate,
               "!bg-bluePowder !text-white": currentDay === fullDate,
             })}

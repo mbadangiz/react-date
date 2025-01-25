@@ -118,7 +118,7 @@ function DatePickerContainer({
       className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} w-full`}
     >
       <div
-        className={`flex h-10 w-64 content-center items-center justify-center bg-bluePowder text-white ${inputClass}`}
+        className={`flex h-10 w-64 cursor-pointer content-center items-center justify-center rounded-xl bg-bluePowder text-white ${inputClass}`}
       >
         {selectedDate
           ? localizedDate(selectedDate, {
