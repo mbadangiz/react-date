@@ -1,21 +1,23 @@
 import moment from "moment-jalaali";
 import { useEffect, useState, WheelEvent } from "react";
-import { T_localType } from "../../core/Types";
+import {
+  DatepickerProvider,
+  useDatepicker,
+} from "../../core/provider/DatepickerProvider";
 import { En_Size } from "../../core/Types/Enums";
 import { IDatePickerProps, IDateState } from "../../core/Types/interfaces";
 import { LocalDateGenerator } from "../../utils";
 import { CalendarController } from "./CalendarController";
 import { DaysLists } from "./DaysLists";
 import { JumpToDate } from "./JumpToDate";
-import {
-  DatepickerProvider,
-  useDatepicker,
-} from "../../core/provider/DatepickerProvider";
 
 export default function DatePicker({
   onChange,
   calendarType = "Persian",
   size = En_Size.LARGE,
+  inputClass,
+  placeholder,
+  value,
 }: IDatePickerProps) {
   return (
     <DatepickerProvider
@@ -23,21 +25,35 @@ export default function DatePicker({
       onChange={onChange ? onChange : () => {}}
       size={size}
     >
-      <DatePickerContainer />
+      <DatePickerContainer
+        inputClass={inputClass}
+        placeholder={placeholder}
+        value={value ? value : new Date()}
+      />
     </DatepickerProvider>
   );
 }
 
-function DatePickerContainer() {
-  const { calendarType, onChange, size, dir, defType } = useDatepicker();
+function DatePickerContainer({
+  inputClass,
+  placeholder,
+  value,
+}: {
+  inputClass?: string;
+  placeholder?: string;
+  value: Date;
+}) {
+  const { calendarType, onChange, size, dir } = useDatepicker();
 
-  const baseDate = new Date();
-
-  const { generateMonthArray } = new LocalDateGenerator(calendarType);
+  const { generateMonthArray, localizedDate } = new LocalDateGenerator(
+    calendarType,
+  );
 
   const [monthDays, setMonthDays] = useState<IDateState>(
-    generateMonthArray(baseDate),
+    generateMonthArray(value),
   );
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const [month, setMonth] = useState<number>(monthDays.currentMonth.numeric);
   const [year, setYear] = useState<number>(monthDays.currentYear);
@@ -84,28 +100,41 @@ function DatePickerContainer() {
     else handlePrevMonth();
   }
 
+  function handleSelectDateLabelState(e: Date) {
+    setSelectedDate(e);
+  }
+
   const boxSizes = {
-    [En_Size.SMALL]: "w-[250px] h-[300px] p-1 pb-2",
+    [En_Size.SMALL]: "w-[300px] h-[340px] p-1 pb-2 px-4",
     [En_Size.MEDIUM]: "h-[367.5px] w-[318.75px] p-3 pb-4",
     [En_Size.LARGE]: "h-[490px] w-[425px] p-5 pb-7",
   };
 
-  const cellSizes = {
-    [En_Size.SMALL]: "h-6 text-xs",
-    [En_Size.MEDIUM]: "h-9 text-sm",
-    [En_Size.LARGE]: "h-12 text-base",
-  };
-
   const boxClass = boxSizes[size];
-  const cellClass = cellSizes[size];
 
   return (
     <div
       dir={dir}
-      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} `}
+      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} w-full`}
     >
       <div
-        className={`${boxClass} relative overflow-hidden rounded-2xl bg-white shadow-xl`}
+        className={`flex h-10 w-64 content-center items-center justify-center bg-bluePowder text-white ${inputClass}`}
+      >
+        {selectedDate
+          ? localizedDate(selectedDate, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : placeholder
+            ? placeholder
+            : calendarType === "Persian"
+              ? "تاریخ"
+              : "Date"}
+      </div>
+
+      <div
+        className={`${boxClass} relative mt-6 overflow-hidden rounded-2xl bg-white shadow-xl`}
       >
         <JumpToDate
           month={month}
@@ -114,8 +143,8 @@ function DatePickerContainer() {
           showJumpToDate={showJumpToDate}
           handleJumpToDate={handleJumpToDate}
         />
+
         <CalendarController
-          dir={dir}
           handlePrevMonth={handlePrevMonth}
           currentYearAndMonth={`${monthDays.currentMonth.long} ${monthDays.currentYear}`}
           handleNextMonth={handleNextMonth}
@@ -123,26 +152,13 @@ function DatePickerContainer() {
         />
 
         <DaysLists
-          defType={defType}
-          calendarType={calendarType}
           monthDays={monthDays}
-          baseDate={baseDate}
+          baseDate={value}
           onChange={onChange}
           handleWheel={handleWheel}
-          cellSize={cellClass}
+          handleSelectDateLabelState={handleSelectDateLabelState}
         />
       </div>
-      {/* <div className="mb-3">
-        <input
-          type="text"
-          onClick={(e) => {
-            const innerWidth = window.innerWidth;
-            const calendarHeightDiff = innerWidth - 490;
-            // console.log(e.currentTarget.offsetTop);
-            console.log(innerWidth);
-          }}
-        />
-      </div> */}
     </div>
   );
 }

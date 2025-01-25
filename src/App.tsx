@@ -1,12 +1,16 @@
+import { useState } from "react";
 import DatePicker from "./components/Datepicker";
 
 function App() {
+  const [myDates, setMyDates] = useState(new Date());
   return (
     <div className="mx-auto w-max py-5">
       <DatePicker
-        calendarType="Persian"
+        calendarType="Gregorian"
+        size="small"
+        value={myDates}
         onChange={(e) => {
-          console.log(e);
+          setMyDates(e);
         }}
       />
     </div>

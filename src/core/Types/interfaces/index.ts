@@ -17,7 +17,7 @@ export interface IDaySchema {
   weekday: string;
   day: number;
   month: IDiffrentShowStyles;
-  year: string;
+  year: number;
   gregorianDate: Date;
 }
 
@@ -32,10 +32,8 @@ export interface IDaysListsProp {
   monthDays: IDateState;
   baseDate: Date;
   onChange: (e: Date) => void;
-  calendarType: T_CalendarType;
-  defType: T_localType;
   handleWheel: (event: WheelEvent<HTMLDivElement>) => void;
-  cellSize: string;
+  handleSelectDateLabelState: (e: Date) => void;
 }
 
 export interface ICalendarControllerProps {
@@ -43,7 +41,6 @@ export interface ICalendarControllerProps {
   currentYearAndMonth: string;
   handleNextMonth: () => void;
   handleShowJumpToDate: () => void;
-  dir: string;
 }
 
 export interface IJumpToDateProps {
@@ -59,16 +56,19 @@ export interface ITinyNumberProps {
   handleMinues: () => void;
   handlePlus: () => void;
   handleOnChangeYearInput: (val: number) => void;
-  defType: T_localType;
 }
 export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
+  size: T_SizeType;
 }
 
 export interface IDatePickerProps {
   calendarType?: T_CalendarType;
   size?: T_SizeType;
   onChange?: (e: Date) => void;
+  inputClass?: string;
+  placeholder?: string;
+  value?: Date;
 }
 
 export interface IDatePickerContext {

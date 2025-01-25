@@ -81,7 +81,7 @@ export class LocalDateGenerator {
     });
     const currentMonthString = this.localizedDate(baseDate, { month: "long" });
 
-    let monthLong = MonthDef[this.calendarType].find(
+    const monthLong = MonthDef[this.calendarType].find(
       (item) => item.name === currentMonthString,
     )!.dayLong!;
 
@@ -154,14 +154,16 @@ export class LocalDateGenerator {
         gregorianDate: new Date(
           this.calculatingDateDifference(baseDate, diff, "-"),
         ),
-        fullDate: tempDateMaker({ dateStyle: "short" }),
         weekday: tempDateMaker({ weekday: "long" }),
         month: {
           numeric: parsIntStrings(tempDateMaker({ month: "2-digit" })),
           long: tempDateMaker({ month: "long" }),
         },
-        year: tempDateMaker({ month: "long" }),
+        year: parsIntStrings(tempDateMaker({ year: "numeric" })),
         day: parsIntStrings(tempDateMaker({ day: "numeric" })),
+        fullDate: convertToEnNumbers(tempDateMaker({ dateStyle: "short" }))
+          .split("/")
+          .join("-"),
       });
     }
 
