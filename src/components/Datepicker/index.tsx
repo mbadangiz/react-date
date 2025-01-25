@@ -1,19 +1,37 @@
 import moment from "moment-jalaali";
 import { useEffect, useState, WheelEvent } from "react";
 import { T_localType } from "../../core/Types";
+import { En_Size } from "../../core/Types/Enums";
 import { IDatePickerProps, IDateState } from "../../core/Types/interfaces";
 import { LocalDateGenerator } from "../../utils";
 import { CalendarController } from "./CalendarController";
 import { DaysLists } from "./DaysLists";
 import { JumpToDate } from "./JumpToDate";
+import {
+  DatepickerProvider,
+  useDatepicker,
+} from "../../core/provider/DatepickerProvider";
 
-export function DatePicker({
+export default function DatePicker({
   onChange,
   calendarType = "Persian",
+  size = En_Size.LARGE,
 }: IDatePickerProps) {
+  return (
+    <DatepickerProvider
+      calendarType={calendarType}
+      onChange={onChange ? onChange : () => {}}
+      size={size}
+    >
+      <DatePickerContainer />
+    </DatepickerProvider>
+  );
+}
+
+function DatePickerContainer() {
+  const { calendarType, onChange, size, dir, defType } = useDatepicker();
+
   const baseDate = new Date();
-  const defType: T_localType = calendarType === "Persian" ? "fa-IR" : "en-US";
-  const dir = calendarType === "Persian" ? "rtl" : "ltr";
 
   const { generateMonthArray } = new LocalDateGenerator(calendarType);
 
@@ -66,17 +84,32 @@ export function DatePicker({
     else handlePrevMonth();
   }
 
+  const boxSizes = {
+    [En_Size.SMALL]: "w-[250px] h-[300px] p-1 pb-2",
+    [En_Size.MEDIUM]: "h-[367.5px] w-[318.75px] p-3 pb-4",
+    [En_Size.LARGE]: "h-[490px] w-[425px] p-5 pb-7",
+  };
+
+  const cellSizes = {
+    [En_Size.SMALL]: "h-6 text-xs",
+    [En_Size.MEDIUM]: "h-9 text-sm",
+    [En_Size.LARGE]: "h-12 text-base",
+  };
+
+  const boxClass = boxSizes[size];
+  const cellClass = cellSizes[size];
+
   return (
     <div
       dir={dir}
-      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"}`}
+      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} `}
     >
-      <div className="absolute h-[490px] w-[425px] overflow-hidden rounded-2xl bg-white p-5 pb-7 shadow-xl">
+      <div
+        className={`${boxClass} relative overflow-hidden rounded-2xl bg-white shadow-xl`}
+      >
         <JumpToDate
           month={month}
           year={year}
-          defType={defType}
-          calendarType={calendarType}
           handleShowJumpToDate={handleShowJumpToDate}
           showJumpToDate={showJumpToDate}
           handleJumpToDate={handleJumpToDate}
@@ -94,11 +127,12 @@ export function DatePicker({
           calendarType={calendarType}
           monthDays={monthDays}
           baseDate={baseDate}
-          onChange={onChange ? onChange : () => {}}
+          onChange={onChange}
           handleWheel={handleWheel}
+          cellSize={cellClass}
         />
       </div>
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <input
           type="text"
           onClick={(e) => {
@@ -108,7 +142,7 @@ export function DatePicker({
             console.log(innerWidth);
           }}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

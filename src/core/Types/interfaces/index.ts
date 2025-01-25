@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode, WheelEvent } from "react";
-import { T_CalendarType, T_localType } from "..";
+import { T_CalendarType, T_DirectionType, T_localType, T_SizeType } from "..";
 
 export interface IDiffrentShowStyles {
   long: string;
@@ -35,6 +35,7 @@ export interface IDaysListsProp {
   calendarType: T_CalendarType;
   defType: T_localType;
   handleWheel: (event: WheelEvent<HTMLDivElement>) => void;
+  cellSize: string;
 }
 
 export interface ICalendarControllerProps {
@@ -49,8 +50,6 @@ export interface IJumpToDateProps {
   showJumpToDate: boolean;
   handleShowJumpToDate: () => void;
   handleJumpToDate: (initialYear: number, initialMonth: number) => void;
-  calendarType: T_CalendarType;
-  defType: T_localType;
   month: number;
   year: number;
 }
@@ -68,5 +67,20 @@ export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export interface IDatePickerProps {
   calendarType?: T_CalendarType;
+  size?: T_SizeType;
   onChange?: (e: Date) => void;
+}
+
+export interface IDatePickerContext {
+  onChange: (e: Date) => void;
+  calendarType: T_CalendarType;
+  size: T_SizeType;
+  defType: T_localType;
+  dir: T_DirectionType;
+}
+export interface IDatePickerProviderProps {
+  onChange: (e: Date) => void;
+  calendarType: T_CalendarType;
+  size: T_SizeType;
+  children: ReactNode;
 }
