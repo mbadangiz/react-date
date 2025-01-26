@@ -102,10 +102,10 @@ function DatePickerContainer({
     setYear(initialYear);
   }
 
-  function handleWheel(event: WheelEvent<HTMLDivElement>) {
-    if (event.deltaY > 0) handleNextMonth();
-    else handlePrevMonth();
-  }
+  // function handleWheel(event: WheelEvent<HTMLDivElement>) {
+  //   if (event.deltaY > 0) handleNextMonth();
+  //   else handlePrevMonth();
+  // }
 
   function handleSelectDateLabelState(e: Date) {
     setSelectedDate(e);

@@ -9,7 +9,6 @@ export function DaysLists({
   monthDays,
   baseDate,
   onChange,
-  handleWheel,
   handleSelectDateLabelState,
   handleToggleShowDatePickerBox,
 }: IDaysListsProp) {
@@ -40,7 +39,7 @@ export function DaysLists({
     .join("-");
 
   return (
-    <div className="grid w-full grid-cols-7 gap-1.5" onWheel={handleWheel}>
+    <div className="grid w-full grid-cols-7 gap-1.5">
       {DayOfWeekDef[defType].map((day) => {
         return (
           <div
