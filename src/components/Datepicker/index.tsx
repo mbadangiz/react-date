@@ -1,11 +1,12 @@
 import moment from "moment-jalaali";
-import { useEffect, useState, WheelEvent } from "react";
+import { MouseEvent, useEffect, useState, WheelEvent } from "react";
 import {
   DatepickerProvider,
   useDatepicker,
 } from "../../core/provider/DatepickerProvider";
-import { En_Size } from "../../core/Types/Enums";
+import { En_Positions, En_Size } from "../../core/Types/Enums";
 import { IDatePickerProps, IDateState } from "../../core/Types/interfaces";
+import { T_Positions } from "../../core/Types/types";
 import { LocalDateGenerator } from "../../utils";
 import { CalendarController } from "./CalendarController";
 import { DaysLists } from "./DaysLists";
@@ -18,12 +19,14 @@ export default function DatePicker({
   inputClass,
   placeholder,
   value,
+  boxPosition,
 }: IDatePickerProps) {
   return (
     <DatepickerProvider
       calendarType={calendarType}
       onChange={onChange ? onChange : () => {}}
       size={size}
+      boxPosition={boxPosition}
     >
       <DatePickerContainer
         inputClass={inputClass}
@@ -43,7 +46,7 @@ function DatePickerContainer({
   placeholder?: string;
   value: Date;
 }) {
-  const { calendarType, onChange, size, dir } = useDatepicker();
+  const { calendarType, onChange, size, dir, boxPosition } = useDatepicker();
 
   const { generateMonthArray, localizedDate } = new LocalDateGenerator(
     calendarType,
@@ -58,6 +61,10 @@ function DatePickerContainer({
   const [month, setMonth] = useState<number>(monthDays.currentMonth.numeric);
   const [year, setYear] = useState<number>(monthDays.currentYear);
   const [showJumpToDate, setShowJumpToDate] = useState<boolean>(false);
+
+  const [showDatePickerBox, setShowDatePickerBox] = useState<boolean>(false);
+  const [calculatedPosition, setCalculatedPosition] =
+    useState<T_Positions>("Bottom");
 
   useEffect(() => {
     const date =
@@ -104,21 +111,55 @@ function DatePickerContainer({
     setSelectedDate(e);
   }
 
+  function handleToggleShowDatePickerBox() {
+    setShowDatePickerBox((prev) => !prev);
+  }
+
+  function handleOpenDatePickerBox(e: MouseEvent<HTMLDivElement>) {
+    if (!boxPosition) {
+      const boxHeight = {
+        [En_Size.SMALL]: 340,
+        [En_Size.MEDIUM]: 370,
+        [En_Size.LARGE]: 490,
+      };
+      const screenHeight = document.documentElement.clientHeight;
+      const topPosition = e.currentTarget.getBoundingClientRect().top;
+
+      const fromTopDistance = screenHeight - topPosition!;
+
+      if (size === "small")
+        if (fromTopDistance > boxHeight[size]) setCalculatedPosition("Bottom");
+        else setCalculatedPosition("Top");
+      else if (size === "large") setCalculatedPosition("Middle");
+    }
+    handleToggleShowDatePickerBox();
+  }
+
   const boxSizes = {
     [En_Size.SMALL]: "w-[300px] h-[340px] p-1 pb-2 px-4",
     [En_Size.MEDIUM]: "h-[367.5px] w-[318.75px] p-3 pb-4",
     [En_Size.LARGE]: "h-[490px] w-[425px] p-5 pb-7",
   };
 
-  const boxClass = boxSizes[size];
+  const pos = boxPosition ? boxPosition : calculatedPosition;
+
+  const boxPositions = {
+    [En_Positions.BOTTOM]: "left-1/2 mt-3 -translate-x-1/2",
+    [En_Positions.LEFT]: "-left-[120%]  top-1/2 -translate-y-1/2",
+    [En_Positions.RIGHT]: "-right-[120%]  top-1/2 -translate-y-1/2",
+    [En_Positions.TOP]: "left-1/2 mb-2 -translate-x-1/2 bottom-12",
+    [En_Positions.MIDDLE]:
+      "left-1/2 mb-2 -translate-x-1/2 top-1/2 -translate-y-1/2 ",
+  };
 
   return (
     <div
       dir={dir}
-      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} w-full`}
+      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} relative w-full`}
     >
       <div
-        className={`flex h-10 w-64 cursor-pointer content-center items-center justify-center rounded-xl bg-bluePowder text-white ${inputClass}`}
+        onClick={handleOpenDatePickerBox}
+        className={`flex h-10 w-64 cursor-pointer content-center items-center justify-center rounded-xl bg-bluePowder text-white ${inputClass} select-none`}
       >
         {selectedDate
           ? localizedDate(selectedDate, {
@@ -134,30 +175,33 @@ function DatePickerContainer({
       </div>
 
       <div
-        className={`${boxClass} relative mt-6 overflow-hidden rounded-2xl bg-white shadow-xl`}
+        className={`${boxSizes[size]} absolute overflow-hidden rounded-2xl bg-white shadow-xl ${showDatePickerBox ? "block" : "hidden"} ${boxPositions[pos]}`}
       >
-        <JumpToDate
-          month={month}
-          year={year}
-          handleShowJumpToDate={handleShowJumpToDate}
-          showJumpToDate={showJumpToDate}
-          handleJumpToDate={handleJumpToDate}
-        />
+        <>
+          <JumpToDate
+            month={month}
+            year={year}
+            handleShowJumpToDate={handleShowJumpToDate}
+            showJumpToDate={showJumpToDate}
+            handleJumpToDate={handleJumpToDate}
+          />
 
-        <CalendarController
-          handlePrevMonth={handlePrevMonth}
-          currentYearAndMonth={`${monthDays.currentMonth.long} ${monthDays.currentYear}`}
-          handleNextMonth={handleNextMonth}
-          handleShowJumpToDate={handleShowJumpToDate}
-        />
+          <CalendarController
+            handlePrevMonth={handlePrevMonth}
+            currentYearAndMonth={`${monthDays.currentMonth.long} ${monthDays.currentYear}`}
+            handleNextMonth={handleNextMonth}
+            handleShowJumpToDate={handleShowJumpToDate}
+          />
 
-        <DaysLists
-          monthDays={monthDays}
-          baseDate={value}
-          onChange={onChange}
-          handleWheel={handleWheel}
-          handleSelectDateLabelState={handleSelectDateLabelState}
-        />
+          <DaysLists
+            monthDays={monthDays}
+            baseDate={value}
+            onChange={onChange}
+            handleWheel={handleWheel}
+            handleSelectDateLabelState={handleSelectDateLabelState}
+            handleToggleShowDatePickerBox={handleToggleShowDatePickerBox}
+          />
+        </>
       </div>
     </div>
   );

@@ -1,5 +1,11 @@
 import { ButtonHTMLAttributes, ReactNode, WheelEvent } from "react";
-import { T_CalendarType, T_DirectionType, T_localType, T_SizeType } from "..";
+import {
+  T_CalendarType,
+  T_DirectionType,
+  T_localType,
+  T_Positions,
+  T_SizeType,
+} from "../types";
 
 export interface IDiffrentShowStyles {
   long: string;
@@ -34,6 +40,7 @@ export interface IDaysListsProp {
   onChange: (e: Date) => void;
   handleWheel: (event: WheelEvent<HTMLDivElement>) => void;
   handleSelectDateLabelState: (e: Date) => void;
+  handleToggleShowDatePickerBox: () => void;
 }
 
 export interface ICalendarControllerProps {
@@ -69,6 +76,7 @@ export interface IDatePickerProps {
   inputClass?: string;
   placeholder?: string;
   value?: Date;
+  boxPosition?: T_Positions;
 }
 
 export interface IDatePickerContext {
@@ -77,10 +85,12 @@ export interface IDatePickerContext {
   size: T_SizeType;
   defType: T_localType;
   dir: T_DirectionType;
+  boxPosition?: T_Positions;
 }
 export interface IDatePickerProviderProps {
   onChange: (e: Date) => void;
   calendarType: T_CalendarType;
   size: T_SizeType;
   children: ReactNode;
+  boxPosition?: T_Positions;
 }

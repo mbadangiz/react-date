@@ -11,6 +11,7 @@ export function DaysLists({
   onChange,
   handleWheel,
   handleSelectDateLabelState,
+  handleToggleShowDatePickerBox,
 }: IDaysListsProp) {
   const { size, calendarType, defType } = useDatepicker();
 
@@ -73,6 +74,7 @@ export function DaysLists({
             })}
             onClick={() => {
               handleSelectDateLabelState(gregorianDate);
+              handleToggleShowDatePickerBox();
               return onChange(gregorianDate);
             }}
           >

@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { En_Size } from "../Types/Enums";
 
-import { T_DirectionType, T_localType } from "../Types";
+import { T_DirectionType, T_localType } from "../Types/types";
 import {
   IDatePickerContext,
   IDatePickerProviderProps,
@@ -16,12 +16,13 @@ export function DatepickerProvider({
   calendarType = "Persian",
   onChange,
   size = En_Size.LARGE,
+  boxPosition,
 }: IDatePickerProviderProps) {
   const defType: T_localType = calendarType === "Persian" ? "fa-IR" : "en-US";
   const dir: T_DirectionType = calendarType === "Persian" ? "rtl" : "ltr";
   return (
     <DatepickerContext.Provider
-      value={{ calendarType, onChange, size, defType, dir }}
+      value={{ calendarType, onChange, size, defType, dir, boxPosition }}
     >
       {children}
     </DatepickerContext.Provider>

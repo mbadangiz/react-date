@@ -3,3 +3,10 @@ export enum En_Size {
   MEDIUM = "medium",
   LARGE = "large",
 }
+export enum En_Positions {
+  TOP = "Top",
+  BOTTOM = "Bottom",
+  LEFT = "Left",
+  RIGHT = "Right",
+  MIDDLE = "Middle",
+}
