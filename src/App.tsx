@@ -10,7 +10,6 @@ function App() {
         <DatePicker
           calendarType="Persian"
           size="small"
-          boxPosition="Left"
           value={myDates}
           onChange={(e) => {
             setMyDates(e);
