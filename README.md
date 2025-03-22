@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+# React Date
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React-Date is a React datepicker library
 
-Currently, two official plugins are available:
+## Authors
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [@Mohammad Badangiz](https://github.com/mbadangiz)
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Use the package manager npm to install foobar.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm i react-date
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Usage
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```javascript
+import { useState } from "react";
+import DatePicker from "./components/Datepicker";
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+function App() {
+  const [myDates, setMyDates] = useState(new Date());
+  console.log(myDates); // will logs date user choose
+  return (
+      <>
+        <DatePicker
+          calendarType="Persian"
+          size="small"
+          value={myDates}
+          onChange={(e) => {
+            setMyDates(e);
+          }}
+        />
+      </div>
+  );
+}
+
+export default App;
+
 ```
+
+## Props
+
+- value\* : Selected value
+- onChange\*
+- calendarType (optional) : "Persian" | "Gregorian" default is "Persian"
+- boxPosition (optional) : "Top" | "Bottom" | "Left" | "Right" | "Middle" By default, it automatically positions itself relative to the screen size.
+- inputClass (optional) : To change the style of the date selection button
+- placeholder (optional)
+- size : "small" | "medium" | "large" To resize the date picker box
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

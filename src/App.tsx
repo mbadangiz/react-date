@@ -8,8 +8,7 @@ function App() {
     <div className="flex h-svh w-full content-normal items-center justify-center">
       <div className="mx-auto w-max">
         <DatePicker
-          calendarType="Persian"
-          size="small"
+          calendarType="Gregorian"
           value={myDates}
           onChange={(e) => {
             setMyDates(e);

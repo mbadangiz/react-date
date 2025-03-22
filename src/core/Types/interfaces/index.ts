@@ -38,7 +38,6 @@ export interface IDaysListsProp {
   monthDays: IDateState;
   baseDate: Date;
   onChange: (e: Date) => void;
-  handleWheel: (event: WheelEvent<HTMLDivElement>) => void;
   handleSelectDateLabelState: (e: Date) => void;
   handleToggleShowDatePickerBox: () => void;
 }

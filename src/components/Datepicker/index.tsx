@@ -1,5 +1,5 @@
 import moment from "moment-jalaali";
-import { MouseEvent, useEffect, useState, WheelEvent } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import {
   DatepickerProvider,
   useDatepicker,
@@ -15,7 +15,7 @@ import { JumpToDate } from "./JumpToDate";
 export default function DatePicker({
   onChange,
   calendarType = "Persian",
-  size = En_Size.LARGE,
+  size = En_Size.SMALL,
   inputClass,
   placeholder,
   value,
@@ -51,11 +51,9 @@ function DatePickerContainer({
   const { generateMonthArray, localizedDate } = new LocalDateGenerator(
     calendarType,
   );
-
   const [monthDays, setMonthDays] = useState<IDateState>(
     generateMonthArray(value),
   );
-
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const [month, setMonth] = useState<number>(monthDays.currentMonth.numeric);
@@ -118,20 +116,50 @@ function DatePickerContainer({
   function handleOpenDatePickerBox(e: MouseEvent<HTMLDivElement>) {
     if (!boxPosition) {
       const boxHeight = {
-        [En_Size.SMALL]: 340,
+        [En_Size.SMALL]: 350,
         [En_Size.MEDIUM]: 370,
         [En_Size.LARGE]: 490,
       };
-      const screenHeight = document.documentElement.clientHeight;
+
       const topPosition = e.currentTarget.getBoundingClientRect().top;
+      const bottomPosition = e.currentTarget.getBoundingClientRect().bottom;
 
-      const fromTopDistance = screenHeight - topPosition!;
+      const distanceFromTop = topPosition - 50;
+      const distanceFromBottom = bottomPosition - 50;
 
-      if (size === "small")
-        if (fromTopDistance > boxHeight[size]) setCalculatedPosition("Bottom");
-        else setCalculatedPosition("Top");
-      else if (size === "large") setCalculatedPosition("Middle");
+      if (size === "small") {
+        if (
+          distanceFromTop > boxHeight[size] &&
+          distanceFromBottom < boxHeight[size]
+        ) {
+          setCalculatedPosition("Top");
+        } else if (
+          distanceFromTop < boxHeight[size] &&
+          distanceFromBottom > boxHeight[size]
+        ) {
+          setCalculatedPosition("Bottom");
+        } else if (
+          distanceFromTop < boxHeight[size] &&
+          distanceFromBottom < boxHeight[size]
+        ) {
+          setCalculatedPosition("Middle");
+        } else if (
+          distanceFromTop > boxHeight[size] &&
+          distanceFromBottom > boxHeight[size]
+        ) {
+          setCalculatedPosition("Bottom");
+        } else {
+          setCalculatedPosition("Middle");
+        }
+      } else if (size === "large") {
+        setCalculatedPosition("Middle");
+      } else {
+        setCalculatedPosition(
+          distanceFromTop > distanceFromBottom ? "Top" : "Bottom",
+        );
+      }
     }
+
     handleToggleShowDatePickerBox();
   }
 
@@ -197,7 +225,6 @@ function DatePickerContainer({
             monthDays={monthDays}
             baseDate={value}
             onChange={onChange}
-            handleWheel={handleWheel}
             handleSelectDateLabelState={handleSelectDateLabelState}
             handleToggleShowDatePickerBox={handleToggleShowDatePickerBox}
           />
