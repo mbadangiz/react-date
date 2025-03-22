@@ -1,6 +1,16 @@
 # React Date
 
-React-Date is a React datepicker library
+A modern, customizable date picker component for React applications with support for both Gregorian and Persian (Jalaali) calendars.
+
+## Features
+
+- Support for both Gregorian and Persian (Jalaali) calendars
+- RTL support
+- Customizable styling with Tailwind CSS
+- TypeScript support
+- Responsive design
+- Keyboard navigation
+- Accessible
 
 ## Authors
 
@@ -8,48 +18,45 @@ React-Date is a React datepicker library
 
 ## Installation
 
-Use the package manager npm to install foobar.
-
 ```bash
-npm i react-date
+npm i react-date-lib
+# or
+yarn add react-date-lib
 ```
 
 ## Usage
 
-```javascript
-import { useState } from "react";
-import DatePicker from "./components/Datepicker";
+```jsx
+import DatePicker from "react-date";
 
 function App() {
-  const [myDates, setMyDates] = useState(new Date());
-  console.log(myDates); // will logs date user choose
+  const handleDateChange = (date) => {
+    console.log("Selected date:", date);
+  };
+
   return (
-      <>
-        <DatePicker
-          calendarType="Persian"
-          size="small"
-          value={myDates}
-          onChange={(e) => {
-            setMyDates(e);
-          }}
-        />
-      </div>
+    <DatePicker
+      onChange={handleDateChange}
+      calendarType="Persian" // or "Gregorian"
+      size="large" // "small" | "medium" | "large"
+      placeholder="Select a date"
+      value={new Date()}
+    />
   );
 }
-
-export default App;
-
 ```
 
 ## Props
 
-- value\* : Selected value
-- onChange\*
-- calendarType (optional) : "Persian" | "Gregorian" default is "Persian"
-- boxPosition (optional) : "Top" | "Bottom" | "Left" | "Right" | "Middle" By default, it automatically positions itself relative to the screen size.
-- inputClass (optional) : To change the style of the date selection button
-- placeholder (optional)
-- size : "small" | "medium" | "large" To resize the date picker box
+| Prop           | Type                                                 | Default     | Description                             |
+| -------------- | ---------------------------------------------------- | ----------- | --------------------------------------- |
+| `onChange`     | `(date: Date) => void`                               | -           | Callback function when date is selected |
+| `calendarType` | `"Persian" \| "Gregorian"`                           | `"Persian"` | Type of calendar to display             |
+| `size`         | `"small" \| "medium" \| "large"`                     | `"large"`   | Size of the date picker                 |
+| `inputClass`   | `string`                                             | -           | Additional CSS classes for the input    |
+| `placeholder`  | `string`                                             | -           | Placeholder text for the input          |
+| `value`        | `Date`                                               | -           | Selected date value                     |
+| `boxPosition`  | `"Top" \| "Bottom" \| "Left" \| "Right" \| "Middle"` | `"Bottom"`  | Position of the date picker box         |
 
 ## License
 

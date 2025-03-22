@@ -1,21 +1,21 @@
 import { useState } from "react";
-import DatePicker from "./components/Datepicker";
+import "./App.css";
 
 function App() {
-  const [myDates, setMyDates] = useState(new Date());
-  console.log(myDates);
+  const [count, setCount] = useState(0);
+
   return (
-    <div className="flex h-svh w-full content-normal items-center justify-center">
-      <div className="mx-auto w-max">
-        <DatePicker
-          calendarType="Gregorian"
-          value={myDates}
-          onChange={(e) => {
-            setMyDates(e);
-          }}
-        />
+    <>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
       </div>
-    </div>
+    </>
   );
 }
 

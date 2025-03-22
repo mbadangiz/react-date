@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode, WheelEvent } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 import {
   T_CalendarType,
   T_DirectionType,

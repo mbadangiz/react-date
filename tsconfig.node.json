@@ -8,17 +8,18 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "composite": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "emitDeclarationOnly": true
   },
   "include": ["vite.config.ts"]
 }
