@@ -4,22 +4,18 @@
     "target": "ES2022",
     "lib": ["ES2023"],
     "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
+    "skipLibCheck": true, 
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-
-    /* Linting */
+    "noEmit": true,
+ 
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "composite": true,
-    "declaration": true,
-    "outDir": "./dist",
-    "emitDeclarationOnly": true
+    "noUncheckedSideEffectImports": true
   },
   "include": ["vite.config.ts"]
 }

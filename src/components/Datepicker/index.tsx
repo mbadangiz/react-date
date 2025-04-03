@@ -100,11 +100,6 @@ function DatePickerContainer({
     setYear(initialYear);
   }
 
-  // function handleWheel(event: WheelEvent<HTMLDivElement>) {
-  //   if (event.deltaY > 0) handleNextMonth();
-  //   else handlePrevMonth();
-  // }
-
   function handleSelectDateLabelState(e: Date) {
     setSelectedDate(e);
   }
@@ -121,35 +116,46 @@ function DatePickerContainer({
         [En_Size.LARGE]: 490,
       };
 
-      const topPosition = e.currentTarget.getBoundingClientRect().top;
-      const bottomPosition = e.currentTarget.getBoundingClientRect().bottom;
+      const windowHeight = window.innerHeight;
+      const elementPos = e.currentTarget.getBoundingClientRect();
 
-      const distanceFromTop = topPosition - 50;
-      const distanceFromBottom = bottomPosition - 50;
+      const distanceFromTop = elementPos.top - 50;
+      const distanceFromBottom = windowHeight - elementPos.bottom - 50;
 
+      console.log(
+        "distanceFromTop : ",
+        distanceFromTop,
+        "distanceFromBottom : ",
+        distanceFromBottom,
+      );
       if (size === "small") {
         if (
           distanceFromTop > boxHeight[size] &&
           distanceFromBottom < boxHeight[size]
         ) {
           setCalculatedPosition("Top");
+          console.log("1");
         } else if (
           distanceFromTop < boxHeight[size] &&
           distanceFromBottom > boxHeight[size]
         ) {
           setCalculatedPosition("Bottom");
+          console.log("2");
         } else if (
           distanceFromTop < boxHeight[size] &&
           distanceFromBottom < boxHeight[size]
         ) {
           setCalculatedPosition("Middle");
+          console.log("3");
         } else if (
           distanceFromTop > boxHeight[size] &&
           distanceFromBottom > boxHeight[size]
         ) {
           setCalculatedPosition("Bottom");
+          console.log("4");
         } else {
           setCalculatedPosition("Middle");
+          console.log("5");
         }
       } else if (size === "large") {
         setCalculatedPosition("Middle");
@@ -183,7 +189,7 @@ function DatePickerContainer({
   return (
     <div
       dir={dir}
-      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} relative w-full`}
+      className={`${calendarType === "Persian" ? "font-Reg_ir" : "font-Reg_en"} relative w-max`}
     >
       <div
         onClick={handleOpenDatePickerBox}
